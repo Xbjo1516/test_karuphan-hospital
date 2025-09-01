@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 import time
 import os
@@ -31,7 +33,12 @@ try:
     print("✅ Home page loaded")
     time.sleep(1)
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADLogin_01.png"))
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
+
+    #driver.save_screenshot(os.path.join(folder_name, "TC_ADLogin_01.png"))
     time.sleep(1)
 
 finally:
