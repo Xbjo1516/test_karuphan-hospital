@@ -17,7 +17,7 @@ driver.maximize_window()
 
 try:
     #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/sign-in")
+    driver.get("http://localhost:3000")
     
     signin = driver.find_element(By.XPATH,"//form/h1").text
     assert signin == "ระบบครุภัณฑ์"
@@ -35,10 +35,10 @@ try:
 
     Role = WebDriverWait(driver, 5).until(
         EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
-    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    assert Role == "System Admin"
     print("✅ Check Role success")
 
-    #driver.save_screenshot(os.path.join(folder_name, "TC_ADLogin_01.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADLogin_01.png"))
     time.sleep(1)
 
 finally:
