@@ -43,6 +43,16 @@ try :
     driver.find_element(By.XPATH,"//form/button").click()
     time.sleep(5)
 
+    name = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[2]/p[1]"))).text
+    assert name == "นภัส ศิริกาญจน์"
+    print("✅ Check Name success")
+
+    role = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH , "//div[2]/p[2]"))).text
+    assert role == "กลุ่มงานบริการด้านปฐมภูมิและองค์รวม"
+    print("✅ Check Role success")
+
     driver.save_screenshot(os.path.join(folder_name, "TC_INSignUp_01.png"))
     time.sleep(1)    
 
