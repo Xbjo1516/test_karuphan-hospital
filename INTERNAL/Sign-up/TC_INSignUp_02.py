@@ -36,7 +36,7 @@ try :
 
     Incomplete = WebDriverWait(driver, 5).until(
         EC.visibility_of_element_located((By.XPATH, "//form/div[1]"))).text.strip()
-    assert Incomplete == "กรอกข้อมูลให้ครบ"
+    assert Incomplete == "กรอกชื่อ-นามสกุล"
     print("✅ Check the success words")
 
     driver.save_screenshot(os.path.join(folder_name, "TC_INSignUp_02.png"))
