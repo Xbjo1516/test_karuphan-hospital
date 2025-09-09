@@ -52,7 +52,7 @@ try:
     driver.find_element(By.XPATH , "//button[text() = 'บันทึก']").click()
     time.sleep(2)
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_EditProfile_01.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_EXEditProfile_01.png"))
     time.sleep(1)
 
 

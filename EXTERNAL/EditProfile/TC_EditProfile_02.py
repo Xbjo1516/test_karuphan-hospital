@@ -55,11 +55,11 @@ try:
     call.clear()
     call.send_keys("0923456789")
     time.sleep(2)
-    
+
     driver.find_element(By.XPATH , "//button[text() = 'ยกเลิก']").click()
     time.sleep(2)
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_EditProfile_02.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_EXEditProfile_02.png"))
     time.sleep(1)
 
 
