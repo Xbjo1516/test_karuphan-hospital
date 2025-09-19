@@ -19,13 +19,13 @@ driver.get("http://localhost:3000")
 
 driver.add_cookie({
     "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..5nVkKiO8jrSDdSIdnpF-PQ.04YaHDOK9mmeGAuGhoQ13_FMnKHCN01rQ5UqavMCqLekvRrggragi170lwrxfs4S9BUmCfZkc1gWPCzz3MdrY6By288OVZVscJyGZY08qtHbpvsQh6WNeqCf6skbFucKHS3gnMso3zmAbXdgbS-ZAPmLpVTfuevqxJrle4TO_zyL-vfaCt3cAN_uMWt4lqkBwURFyhhI_2o7z7YQqnYaS1Xr3urgFQRRSSlU-WqEDWBFSerxqcK3wVeko0YVWk4NcApb_l9RHuOr0mZv5UrROVYi1tlEPO7cTBJ3uG_Z7DyA2Ohh_N-px2moow8_viJn4Pe4PU6Pbrmvb19A5XGHdI-lFIsjcrfAORBZt19U7ON9oikfR4oKPveELjpFNw4Nf6VHktEXgMNkcpMAcqxEHXC9dudEvf-oSYGYIUPcprE.bjlepB4BM4uYj5WIYWeOsHZHq0Flh0bVS6NfSRAb6Jw",
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..eoAelVwdW1lTWMHwZNxV9A.SFc_FtY7B0-fDEOXWBodWAMSef371u7Xw-tOfNlOvawjJqB0PFz1su6qfBTjfZjbHIiDNYDzpjt6ze0Si98HkvejU_um0CvjRaBYhU1KkCU9Jm6pJDO_mImbI8fV6Z8k92RnQTnfFY0TLZ5-8NGl1w_TJNv91mSnV6XdWVS7MDlUF9a6kDL-Z3eml4GxMrbqAYxraD6iaeLvZyR2ae1EojMdKZaT5ZFNnJL66iyyKzzJT54r6cqiaDDpimVa_L_-PKALCIYQ74aY0pzYz9bB890iXPYo8Vyg1Qjpx2Oo8Oa23opY02vBkV0WAZWe5zfiytW2BhYIiYUvRTo_k09Jq7mbtvfGrlqiwszzMKAhOUUWcAGSWq--jt-WD3EXzAPyN2VauwoRbZ3QKtNLGfycIfqyVhWJ9xXqQRuD-4nmPx0.6IWiGKtlHwyQ7ngwJrAMPSY0V-RhjVJn2EOUH4fz4jI",
     "path": "/",
 })
 
 try:
     #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role3-external")
+    driver.get("http://localhost:3000/role2-internal")
     
     signin = WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
