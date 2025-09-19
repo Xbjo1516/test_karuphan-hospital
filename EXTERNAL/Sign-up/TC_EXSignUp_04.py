@@ -45,7 +45,7 @@ try :
 
     AlreadyUsed = WebDriverWait(driver, 5).until(
         EC.visibility_of_element_located((By.XPATH, "//form/div[1]"))).text.strip()
-    assert AlreadyUsed == "อีเมลนี้ถูกใช้แล้ว"
+    assert AlreadyUsed == "อีเมลนี้มีผู้ใช้งานแล้ว"
     print("✅ Check the success words")
 
     driver.save_screenshot(os.path.join(folder_name, "TC_EXSignUp_04.png"))
