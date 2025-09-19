@@ -1,0 +1,48 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import time
+import os
+
+folder_name = "screenshots"
+os.makedirs(folder_name, exist_ok=True)
+
+#การเปิดหน้าเว็บโดยไม่ปิดเอง
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach",True)
+driver = webdriver.Chrome(options=options)
+driver.maximize_window()
+
+driver.get("http://localhost:3000")
+
+driver.add_cookie({
+    "name": "authjs.session-token",
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..lac3njMje46WCneeEjcb9w.cNLedmSN9j2qLhBpIGlVQFbRLHDicsZ09ZvjVZV4ms9yPFsYq7hkSOw7QKqfrfCARwIPQJg07JaurWL_ZZTOKoMu1psrIeMBdFYw2LE71JFEftHpE6tNKbzHqyYjvuhfgVgwgHCaKWwX6_vJ_bI2GTJPE3hGHGdUtNUIapDtOQP7PCvb-QQ3nxvY5ZxuqIZzuZVGoCn0BbCeaHujdZPuAnheNvZ8iUm6_K63fgJEGJYhCus53d_bBk_TdfnqQrEZE5oR00HoZ7SRLXNHL5McqHLK3KYnDXFMXfFYXe9PLK-8pOD9QGblmdXrpdiWYuaWP8j41NbOqqYz8ZlQEKkGMUEp-XQGPyOTS6cftF97kA22xENHYosAEJJoAob50xyzbfGUABcuslPy7JkOX7dMCFjdsiJjjyvLEi3vlpAsXL0.na-mBaIwCwWh2HAbcC6wS7bP6yYvt2A_2esU-bTmBS0",
+    "path": "/",
+})
+
+try:
+    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
+    driver.get("http://localhost:3000/role2-internal")
+    time.sleep(5)
+    
+    role = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[2]/p[2]"))).text
+    assert role == "กลุ่มงานบริการด้านปฐมภูมิและองค์รวม"
+    print("✅ Check Role success")
+
+    driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr[1]/td[7]/button").click()
+    time.sleep(2)
+
+    amount = driver.find_element(By.XPATH, "//table/tbody/tr/td[2]").text
+    print(f"a = '{amount}'")
+    assert amount == "1"
+    print("✅ Check the success words")
+
+    #driver.save_screenshot(os.path.join(folder_name, "TC_INBorrowKaruphan_01.png"))
+    time.sleep(1)
+
+finally:
+    driver.quit()
