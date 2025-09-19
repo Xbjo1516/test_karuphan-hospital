@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoAlertPresentException
 
 import time
 import os
@@ -9,7 +10,6 @@ import os
 folder_name = "screenshots"
 os.makedirs(folder_name, exist_ok=True)
 
-#การเปิดหน้าเว็บโดยไม่ปิดเอง
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
@@ -24,7 +24,6 @@ driver.add_cookie({
 })
 
 try:
-    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
     driver.get("http://localhost:3000/role1-admin")
     
     signin = WebDriverWait(driver, 20).until(
@@ -44,15 +43,20 @@ try:
     submenu_item.click()
     time.sleep(2)
 
-    driver.find_element(By.XPATH,"//button[@title='แก้ไข']").click()
-    Editname = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr/td[2]/input"))).send_keys("859")
-    driver.find_element(By.XPATH,"//section[1]//table/tbody/tr/td[3]/input").send_keys("859")
+    driver.find_element(By.XPATH,"//section[1]/div[2]/table/tbody/tr[1]/td[5]").click()
     time.sleep(1)
-    driver.find_element(By.XPATH,"//section[1]/div[2]/table/tbody/tr/td[4]/button[2]").click()
-    time.sleep(5)
+
+    try:
+        alert = driver.switch_to.alert
+        print("⚠️ Alert detected:", alert.text)
+        alert.accept()  # กด OK / ยอมรับ
+        print("✅ Alert accepted")
+    except NoAlertPresentException:
+        print("No alert present")
+
+    time.sleep(2)
     
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADCategoryKaruphan_03.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADCategoryKaruphan_05.png"))
     time.sleep(1)
 
 finally:
