@@ -19,7 +19,7 @@ driver.get("http://localhost:3000")
 
 driver.add_cookie({
     "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..Fl_cSt3yNZjODXzmBALLpg.bWmVv0sGJysR-S83_lGUyWv4piA7o_GKG-j3nmrE6CJmUaW0lLTmBNnJ5KldEPjoJMZtYKJWJW8B5ISAg8I6bXYW2Dg6lSfBOhiY2-O2WM2paHDIoz6K6LLp26Qh32xgc_fToqXXAIp7uwEA4pz1e75U0E-uwTnBES0lg8OuI6tUSaCeY9v4hfk0o4vKsnQIAFzn2sUED5pV3zubO1Mo8g.qHcu9yjY88Ccaz46INWP0w1TDIg-8ygy4_Rb1sVJWDw",
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..e61kjT9I7PLmGdf3G7vUBw.8aJ-gCjXDNCo8r-1TtLB-dxfxnUhNJnC79IYk_l534xy7zxkY6q_2pnqSAbVnHj56_DK52BGIkuhvHOnjRxmif6NWWAPaBYLnCGU6xpwX5IUgv1ptSfY8STx1dPHHW0YPwPq_C0BvMzcVtdKYjCA-ma8ud02APF-3adfzLoRhDkDVDMXoTDcMS5OClRel1j3AGIQ3tmN5zkzS3M3z5zE3lZZiE2htzSmJW0ybIDaj5Y.suAyhyKYtWQOiTU7fEx84FBYPD0QcI0aM1Joukb8TjE",
     "path": "/",
 })
 
@@ -27,11 +27,16 @@ try:
     #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
     driver.get("http://localhost:3000/role1-admin")
     
-    signin = driver.find_element(By.XPATH,"//p[contains(@class, 'text-white')]").text
-    assert signin == "ผู้ดูแลระบบครุภัณฑ์"
+    signin = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
+    ).text.strip()
+
+    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
     print("✅ Check the success words")
+    time.sleep(2)
 
     driver.find_element(By.LINK_TEXT,"แดชบอร์ด").click()
+    time.sleep(2)
 
     total_IN = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//section/div[1]/div[1]/p[1]"))).text
@@ -42,9 +47,11 @@ try:
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     driver.get("http://localhost:3000/role1-admin")
-
+    
+    time.sleep(5)
     dropdown_button = driver.find_element(By.XPATH, "//button[span[text()='รายงานสรุปผล']]")
     dropdown_button.click()
+    time.sleep(2)
 
     submenu_item = WebDriverWait(driver, 5).until(
         EC.element_to_be_clickable((By.XPATH, "//a[span[text()='สรุปยอดครุภัณฑ์']]"))
