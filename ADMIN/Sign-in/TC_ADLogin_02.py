@@ -17,14 +17,14 @@ driver.maximize_window()
 
 try:
     #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/sign-in")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
     signin = driver.find_element(By.XPATH,"//form/h1").text
     assert signin == "ระบบครุภัณฑ์"
     print("✅ Check the success words")
 
     #Test-02 เช็กอีเมลและรหัสไม่ถูก
-    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admintest@pcu.local")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admintest@pcu.test")
     driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("Admintest#1234")
     driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     invalid = WebDriverWait(driver, 5).until(

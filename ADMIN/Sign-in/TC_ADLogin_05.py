@@ -17,7 +17,7 @@ driver.maximize_window()
 
 try:
     #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/sign-in")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
     signin = driver.find_element(By.XPATH,"//form/h1").text
     assert signin == "ระบบครุภัณฑ์"
