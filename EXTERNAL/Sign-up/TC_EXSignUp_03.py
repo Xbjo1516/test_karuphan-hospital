@@ -17,7 +17,7 @@ driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
 try :
-    driver.get("http://localhost:3000/")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     driver.find_element(By.LINK_TEXT,"สมัครสมาชิก").click()
 
     signup = WebDriverWait(driver, 5).until(

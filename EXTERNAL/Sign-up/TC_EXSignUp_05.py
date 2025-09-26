@@ -26,18 +26,18 @@ try :
     print("✅ Check the success words")
 
     dropdown = Select(driver.find_element(By.XPATH,"//form/select"))
-    dropdown.select_by_visible_text("กลุ่มงานบริการด้านปฐมภูมิและองค์รวม")
+    dropdown.select_by_visible_text("กลุ่มงานเทคนิคการแพทย์")
 
     internal = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//form/p[2]"))).text
-    assert internal == "ระบบจะกำหนดบทบาท: บุคลากรภายใน (INTERNAL)"
+    assert internal == "ระบบจะกำหนดบทบาท: เจ้าหน้าที่นอกกลุ่มงาน (EXTERNAL)"
     print("✅ internal sign-up message displayed correctly")
 
-    driver.find_element(By.XPATH, "//input[@placeholder='name']").send_keys("รวิกานต์ กาญจนาพงศ์")
-    driver.find_element(By.XPATH,"//input[@placeholder='+66']").send_keys("0987654321")
-    driver.find_element(By.XPATH,"//input[@placeholder='example@gmail.com']").send_keys("rawikan.k@example.com")
-    driver.find_element(By.XPATH,"//form/div[1]/input").send_keys("rawikan1234")
-    driver.find_element(By.XPATH,"//form/div[2]/input").send_keys("rawikan")
+    driver.find_element(By.XPATH, "//input[@placeholder='name']").send_keys("วีรภัทร สุวรรณศรี")
+    driver.find_element(By.XPATH,"//input[@placeholder='+66']").send_keys("0923456789")
+    driver.find_element(By.XPATH,"//input[@placeholder='example@gmail.com']").send_keys("weeraphat.s@example.com")
+    driver.find_element(By.XPATH,"//form/div[1]/input").send_keys("weera")
+    driver.find_element(By.XPATH,"//form/div[2]/input").send_keys("weera")
     time.sleep(2)
 
     driver.find_element(By.XPATH,"//form/button").click()
@@ -45,10 +45,10 @@ try :
 
     AlreadyUsed = WebDriverWait(driver, 5).until(
         EC.visibility_of_element_located((By.XPATH, "//form/div[1]"))).text.strip()
-    assert AlreadyUsed == "รหัสผ่านไม่ตรงกัน"
+    assert AlreadyUsed == "รหัสผ่านอย่างน้อย 8 ตัวอักษร"
     print("✅ Check the success words")
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_INSignUp_03.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_EXSignUp_05.png"))
     time.sleep(1)    
 
 finally:
