@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -15,6 +14,7 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
+
 
 try:
     driver.get("https://karuphan-hospital-production.up.railway.app/")
@@ -41,23 +41,13 @@ try:
     time.sleep(2)
     
     people = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//section/div[2]/table/tbody/tr[1]/td[6]/button"))).click()
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[2]/div/div/section/div[2]/table/tbody/tr[5]/td[7]/button"))).click()
     time.sleep(2)
-
-    role = Select(driver.find_element(By.XPATH, "//form//div[1]//div[2]//div[1]/select"))
-    role.select_by_visible_text("EXTERNAL")
-
-    agency = Select(driver.find_element(By.XPATH, "//form/div[1]/div[2]/div[2]/select"))
-    agency.select_by_visible_text("กลุ่มงานเทคนิคการแพทย์ (1)")
-
-    call = driver.find_element(By.XPATH, "//form/div[1]/div[3]/input")
-    call.clear()
-    call.send_keys("085-987-5625")
-
-    driver.find_element(By.XPATH, "//form/div[2]/button[2]").click()
-    time.sleep(5)
-
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADManagePersonnel_01.png"))
+    
+    driver.find_element(By.XPATH, "//button[text()= 'ลบ']").click()
+    time.sleep(2)
+    
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADManagePersonnel_04.png"))
     time.sleep(1)
 
 finally:
