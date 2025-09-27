@@ -15,28 +15,28 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..Fl_cSt3yNZjODXzmBALLpg.bWmVv0sGJysR-S83_lGUyWv4piA7o_GKG-j3nmrE6CJmUaW0lLTmBNnJ5KldEPjoJMZtYKJWJW8B5ISAg8I6bXYW2Dg6lSfBOhiY2-O2WM2paHDIoz6K6LLp26Qh32xgc_fToqXXAIp7uwEA4pz1e75U0E-uwTnBES0lg8OuI6tUSaCeY9v4hfk0o4vKsnQIAFzn2sUED5pV3zubO1Mo8g.qHcu9yjY88Ccaz46INWP0w1TDIg-8ygy4_Rb1sVJWDw",
-    "path": "/",
-})
 try:
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
-    ).text.strip()
-
-    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
+    signup = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'เข้าสู่บัญชีของคุณ')]"))).text.strip()
+    assert signup == "เข้าสู่บัญชีของคุณ"
     print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admin@pcu.test")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("Admin#1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
+    
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
 
     ADWaitapproval = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr/td[4]"))
+        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[1]/td[4]"))
     ).text
-    assert ADWaitapproval == "CAT01-EQ003"
+    assert ADWaitapproval == "4540-001-0001/1"
     print("✅ Check the success Waitapproval-1")
     time.sleep(2)
 
@@ -45,7 +45,7 @@ try:
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
 
-    driver.get("http://localhost:3000")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     time.sleep(1)
 
     driver.delete_all_cookies()
@@ -53,7 +53,7 @@ try:
     driver.execute_script("window.sessionStorage.clear();")
     time.sleep(0.5)
 
-    driver.get("http://localhost:3000")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     time.sleep(3)
 
     driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("weeraphat.s@example.com")
@@ -70,13 +70,12 @@ try:
     time.sleep(3)
 
 #ADWaitapproval
-    expected = ("CAT01-EQ003", "รออนุมัติ")
+    expected = ("4540-001-0001/1", "รออนุมัติ")
 
     row_id = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr/td[4]").text.strip()
     row_status = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr/td[6]/span").text.strip()
     assert (row_id, row_status) == expected, f"Got {(row_id, row_status)}"
     print("✅ Row values ADWaitapproval success")
-
 
 finally:
     driver.quit()
