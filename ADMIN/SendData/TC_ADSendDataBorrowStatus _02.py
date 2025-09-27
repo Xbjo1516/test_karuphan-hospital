@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 import time, glob, os, pyautogui
 
@@ -40,9 +41,13 @@ try:
     dropdown_button.click()
 
     submenu_item = WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='รายงานการยืมคืน']]"))
+        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='รายงานสถานะของครุภัณฑ์']]"))
     )
     submenu_item.click()
+    time.sleep(2)
+
+    dropdown = Select(driver.find_element(By.XPATH, "//select"))
+    dropdown.select_by_visible_text("ครุภัณฑ์ทางการแพทย์และวิทยาศาสตร์")
     time.sleep(2)
 
     # คลิกปุ่มดาวน์โหลด Excel
@@ -58,7 +63,7 @@ try:
     while True:
         if not glob.glob(os.path.join(downloads_folder, "*.crdownload")):
             break
-        time.sleep()
+        time.sleep(1)
 
     list_of_files = glob.glob(os.path.join(downloads_folder, "*.csv"))
     latest_file = max(list_of_files, key=os.path.getctime)
@@ -67,9 +72,8 @@ try:
     os.startfile(latest_file)
     print("📂 เปิดไฟล์ Excel แล้ว")
     time.sleep(10)
-
     # Screenshot
-    screenshot_path = os.path.join(folder_name, "TC_ADSendDataBorrowReturn_01.png")
+    screenshot_path = os.path.join(folder_name, "TC_ADSendDataBorrowStatus_02.png")
     pyautogui.screenshot(screenshot_path)
     time.sleep(1)
 

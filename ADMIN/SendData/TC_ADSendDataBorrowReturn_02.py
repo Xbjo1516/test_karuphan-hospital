@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 import time, glob, os, pyautogui
 
@@ -14,34 +15,39 @@ options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..auF41StOgIcpo9ituFgKiw.z4BoJEVgV4tnSOlxtK7IFeIZZHjD0RZaaBLq1u9Kslpylo4BLsuutN--ET4RzvhL9clp0djKC899AOaTIF2Edw-99zSSbt-NJZwnehQMn6_-MVq_yBvtNAkgEfRHuwySOPvuaYlMfU6GIN8jYLBWHVFi6iG0VEJROhaDN4Cr8yYjpclZ_BNpc6vNkDBnpglX7hE70lhKTqFWQg1NXP7v8rWEOI4D2ozwLNffTT_Pju8.poi0ZqZDhWhrV6BFqhXtdcy9MkwbaoA-C5icRoa3gy0",
-    "path": "/",
-})
-
 try:
-    # เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH, "//p[contains(@class, 'text-white')]"))
-    ).text.strip()
-
-    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
+    signin = driver.find_element(By.XPATH,"//form/h1").text
+    assert signin == "ระบบครุภัณฑ์"
     print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admin@pcu.test")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("Admin#1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
+
+    assert "karuphan-hospital" in driver.title
+    print("✅ Home page loaded")
+    time.sleep(1)
+
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
 
     # คลิกเมนูรายงาน
     dropdown_button = driver.find_element(By.XPATH, "//button[span[text()='รายงานสรุปผล']]")
     dropdown_button.click()
 
     submenu_item = WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='รายงานครุภัณฑ์ที่ถูกยกเลิก']]"))
+        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='รายงานการยืมคืน']]"))
     )
     submenu_item.click()
+    time.sleep(2)
+
+    dropdown = Select(driver.find_element(By.XPATH, "//select"))
+    dropdown.select_by_visible_text("คืนแล้ว")
     time.sleep(2)
 
     # คลิกปุ่มดาวน์โหลด Excel
@@ -49,7 +55,8 @@ try:
         EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='ดาวน์โหลด Excel']"))
     )
     excel_button.click()
-
+    time.sleep(5)
+    
     # ✅ รอจนไฟล์โหลดเสร็จ (ไม่มี .crdownload ค้างอยู่)
     downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
     while True:
@@ -67,7 +74,7 @@ try:
     time.sleep(10)
     
     # Screenshot
-    screenshot_path = os.path.join(folder_name, "TC_ADSendDataBorrowCanceled_01.png")
+    screenshot_path = os.path.join(folder_name, "TC_ADSendDataBorrowReturn_02.png")
     pyautogui.screenshot(screenshot_path)
     time.sleep(1)
 
