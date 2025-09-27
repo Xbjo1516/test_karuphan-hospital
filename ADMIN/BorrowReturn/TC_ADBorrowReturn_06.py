@@ -44,8 +44,8 @@ try:
     driver.find_element(By.XPATH, "//button[text() = 'ตรวจสอบ']").click()
     time.sleep(2)
     
-    dropdown = Select(driver.find_element(By.XPATH, "//table/tbody/tr/td[4]/select"))
-    dropdown.select_by_visible_text("ปกติ")
+    #dropdown = Select(driver.find_element(By.XPATH, "//table/tbody/tr/td[4]/select"))
+    #dropdown.select_by_visible_text("")
 
     #dropdown1 = Select(driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div/div[1]/table/tbody/tr[2]/td[4]/select"))
     #dropdown1.select_by_visible_text("ชำรุด")
@@ -59,14 +59,7 @@ try:
     driver.find_element(By.XPATH, "//button[text() = 'บันทึกรับคืน']").click()
     time.sleep(2)
 
-    driver.execute_script("window.open('');")
-    driver.switch_to.window(driver.window_handles[1])
-    driver.get("https://karuphan-hospital-production.up.railway.app/role1-admin")
-
-    driver.find_element(By.XPATH, "//button[text() = 'คืนแล้ว']").click()
-    time.sleep(5)
-
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADBorrowReturn_04.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADBorrowReturn_06.png"))
     time.sleep(1)
 finally:
     driver.quit()

@@ -56,17 +56,17 @@ try:
     driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div/div[2]/div[2]/div[2]/textarea").send_keys("คืน")
     time.sleep(2)
     
-    driver.find_element(By.XPATH, "//button[text() = 'บันทึกรับคืน']").click()
+    driver.find_element(By.XPATH, "//button[text() = 'ยกเลิก']").click()
     time.sleep(2)
 
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     driver.get("https://karuphan-hospital-production.up.railway.app/role1-admin")
 
-    driver.find_element(By.XPATH, "//button[text() = 'คืนแล้ว']").click()
+    driver.find_element(By.XPATH, "//button[text() = 'อนุมัติแล้ว/รอตรวจสอบก่อนคืน']").click()
     time.sleep(5)
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADBorrowReturn_04.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADBorrowReturn_05.png"))
     time.sleep(1)
 finally:
     driver.quit()
