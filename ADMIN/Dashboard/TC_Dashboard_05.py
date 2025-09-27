@@ -39,36 +39,30 @@ try:
     driver.find_element(By.LINK_TEXT,"แดชบอร์ด").click()
     time.sleep(2)
 
-    total_IN = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//section/div[1]/div[1]/p[1]"))).text
+    total = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//section/div[2]/div[2]/div/div/p[2]"))).text
     time.sleep(1)
-    total_IN = int(total_IN.strip())
-    print(f"จำนวนครุภัณฑ์ (แท็บ 1): {total_IN}")
+    total = int(total.strip())
+    print(f"จำนวนครุภัณฑ์ (แท็บ 1): {total}")
 
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     driver.get("https://karuphan-hospital-production.up.railway.app/")
-    
-    time.sleep(5)
-    dropdown_button = driver.find_element(By.XPATH, "//button[span[text()='รายงานสรุปผล']]")
-    dropdown_button.click()
     time.sleep(2)
 
-    submenu_item = WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='สรุปยอดครุภัณฑ์']]"))
-    )   
-    submenu_item.click()
-    time.sleep(2)
+    text = driver.find_element(By.XPATH, "//button[2]").get_attribute("textContent")
+    match = re.search(r'\((\d+)\)', text)
 
-    text = driver.find_element(By.XPATH, "//div[4]/div/div[1]").text
-    number = int(re.search(r'\d+', text).group())
-    print(f"จำนวนครุภัณฑ์ (แท็บ 2): {number}")  
+    if match:
+        number = int(match.group(1)) 
+        print(f"จำนวนครุภัณฑ์ (แท็บ 2): {number}")
 
-    if total_IN == number:
-        print("✅ จำนวนครุภัณฑ์ตรงกันทั้งสองแท็บ")
+        if total == number:
+            print("✅ จำนวนครุภัณฑ์ตรงกันทั้งสองแท็บ")
+        else:
+            print("❌ จำนวนครุภัณฑ์ไม่ตรงกัน!")
     else:
-        print("❌ จำนวนครุภัณฑ์ไม่ตรงกัน!")
-    time.sleep(1)
+        print("❌ หาเลขไม่เจอในข้อความ:", text)
 
 finally:
     driver.quit()

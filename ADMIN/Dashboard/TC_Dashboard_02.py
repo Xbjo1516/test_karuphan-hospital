@@ -15,25 +15,26 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..e61kjT9I7PLmGdf3G7vUBw.8aJ-gCjXDNCo8r-1TtLB-dxfxnUhNJnC79IYk_l534xy7zxkY6q_2pnqSAbVnHj56_DK52BGIkuhvHOnjRxmif6NWWAPaBYLnCGU6xpwX5IUgv1ptSfY8STx1dPHHW0YPwPq_C0BvMzcVtdKYjCA-ma8ud02APF-3adfzLoRhDkDVDMXoTDcMS5OClRel1j3AGIQ3tmN5zkzS3M3z5zE3lZZiE2htzSmJW0ybIDaj5Y.suAyhyKYtWQOiTU7fEx84FBYPD0QcI0aM1Joukb8TjE",
-    "path": "/",
-})
-
 try:
-    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
-    ).text.strip()
-
-    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
+    signin = driver.find_element(By.XPATH,"//form/h1").text
+    assert signin == "ระบบครุภัณฑ์"
     print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admin@pcu.test")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("Admin#1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
+
+    assert "karuphan-hospital" in driver.title
+    print("✅ Home page loaded")
+    time.sleep(1)
+
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
 
     driver.find_element(By.LINK_TEXT,"แดชบอร์ด").click()
 
@@ -45,7 +46,7 @@ try:
 
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     time.sleep(5)
     
     driver.find_element(By.LINK_TEXT,"จัดการบุคลากร").click()
