@@ -16,21 +16,17 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..9fX6KrmuzMO6IECh7UpK9Q.24b09nFhBRzakhh7jy5HSkIt927Wqst0s1e5G9LJf22Sl6IbwtzgNesMurX7han-aTiNU72mBO7lNW1Z7RrRyFD3aWK_7aYCa06v3iCPId5yzC6MXD9u_uotMUNZHmhBeGx96CcLgv7901xBNEK7o9EFyVqWNewwXC2WTn5evSMEUqZjHUFFxdQizE7V3Lak0muE9ZObOmab3VQShYxDt212aEw_zwO6x1ivR0mxjiqFdITM4rt83S_5G2XzFJm2sCPqWc14g-mQlCPfsHrr6GETe1RDqRbfCoz3mhSlwClfZdmgW8aLHLjAr_NdAnyuWbXvqRBlLI_0RMs74C3TnWizC-a3kowqsW90HOnSju6YmbYjKNHr5_wNXk9-0w_i.GJpKFJcW1GPGimq4Rb0URBW5foqIHogK0Fq2aIV0fQY",
-    "path": "/",
-})
-
 try:
-    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role3-external")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
-    ).text.strip()
+    signup = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'เข้าสู่บัญชีของคุณ')]"))).text.strip()
+    assert signup == "เข้าสู่บัญชีของคุณ"
+    print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("weeraphat.s@example.com")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("weeraphat1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
 
     role = WebDriverWait(driver, 10).until(
