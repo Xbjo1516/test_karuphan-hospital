@@ -11,42 +11,44 @@ os.makedirs(folder_name, exist_ok=True)
 
 #การเปิดหน้าเว็บโดยไม่ปิดเอง
 options = webdriver.ChromeOptions()
-options.add_experimental_option("detach",True)
+options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..Fl_cSt3yNZjODXzmBALLpg.bWmVv0sGJysR-S83_lGUyWv4piA7o_GKG-j3nmrE6CJmUaW0lLTmBNnJ5KldEPjoJMZtYKJWJW8B5ISAg8I6bXYW2Dg6lSfBOhiY2-O2WM2paHDIoz6K6LLp26Qh32xgc_fToqXXAIp7uwEA4pz1e75U0E-uwTnBES0lg8OuI6tUSaCeY9v4hfk0o4vKsnQIAFzn2sUED5pV3zubO1Mo8g.qHcu9yjY88Ccaz46INWP0w1TDIg-8ygy4_Rb1sVJWDw",
-    "path": "/",
-})
 try:
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
+    signup = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'เข้าสู่บัญชีของคุณ')]"))
     ).text.strip()
-
-    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
+    assert signup == "เข้าสู่บัญชีของคุณ"
     print("✅ Check the success words")
+
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/input").send_keys("admin@pcu.test")
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/div[1]/input").send_keys("Admin#1234")
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/button").click()
+    time.sleep(2)
+    
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))
+    ).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
+
+    driver.find_element(By.XPATH, "//button[2]").click()
     time.sleep(2)
 
-    driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div[2]/div/div[1]/div/button[2]").click()
-
     ADBorrow1 = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[1]/td[4]"))
+        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[3]/td[4]"))
     ).text
-    #print(f"a = '{ADBorrow1}'")
-    assert ADBorrow1 == "CAT03-EQ004"
+    assert ADBorrow1 == "3920-005-1103/5"
     print("✅ Check the success Borrow-1")
 
+    # หลายรายการ
     ADBorrow = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[2]/td[4]"))
+        EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[1]/td[4]"))
     ).text
-    #print(f"a = '{ADBorrow}'")
-    assert ADBorrow in ["CAT02-EQ005, CAT03-EQ001"], f"Unexpected value : {ADBorrow}"
+    assert "7110-006-0007/292" in ADBorrow or "7110-001-0007/31" in ADBorrow, f"Unexpected value: {ADBorrow}"
     print("✅ Check the success Borrow")
 
     time.sleep(2)
@@ -56,23 +58,22 @@ try:
     ADReturn1 = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[2]/td[4]"))
     ).text
-    #print(f"a = '{ADReturn1}'")
-    assert ADReturn1 == "CAT01-EQ001"
+    assert ADReturn1 == "0000-001-0001/1"
     print("✅ Check the success Return-1")
 
+    # หลายรายการ
     ADReturn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//table/tbody/tr[1]/td[4]"))
     ).text
-    #print(f"a = '{ADReturn}'")
-    assert ADReturn in ["CAT01-EQ005, CAT02-EQ003, CAT02-EQ004"], f"Unexpected value : {ADReturn}"
+    assert "7440-001-0006/124" in ADReturn or "1111-001-0025/12" in ADReturn, f"Unexpected value: {ADReturn}"
     print("✅ Check the success Return")
 
-#-------------------------------------------------------------#
+    #-------------------------------------------------------------#
 
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
 
-    driver.get("http://localhost:3000")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     time.sleep(1)
 
     driver.delete_all_cookies()
@@ -80,54 +81,36 @@ try:
     driver.execute_script("window.sessionStorage.clear();")
     time.sleep(0.5)
 
-    driver.get("http://localhost:3000")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     time.sleep(3)
 
-    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("napass.sirikarn@gmail.com")
-    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("napass1234")
-    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/input").send_keys("napass.sirikarn@gmail.com")
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/div[1]/input").send_keys("napass1234")
+    driver.find_element(By.XPATH, "/html/body/div[1]/form/button").click()
     time.sleep(2)
 
     role = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//div[2]/p[2]"))).text
+        EC.presence_of_element_located((By.XPATH, "//div[2]/p[2]"))
+    ).text
     assert role == "กลุ่มงานบริการด้านปฐมภูมิและองค์รวม"
     print("✅ Check Role success")
 
     driver.find_element(By.LINK_TEXT, "ประวัติการยืมครุภัณฑ์").click()
     time.sleep(3)
-#-----การยืม : อนุมัติแล้ว/รอคืน
-    expected = ("CAT03-EQ004", "อนุมัติแล้ว/รอคืน")
 
-    row_id = driver.find_element(By.XPATH, "//table/tbody/tr[1]/td[5]").text.strip()
-    row_status = driver.find_element(By.XPATH, "//table/tbody/tr[1]/td[8]/span").text.strip()
-    assert (row_id, row_status) == expected, f"Got {(row_id, row_status)}"
-    print("✅ Row values ADBorrow1 success")
+    #----- การยืม/คืน: ใช้ฟังก์ชันกลาง
+    def check_row(row_xpath, expected_id, expected_status):
+        row_id = driver.find_element(By.XPATH, f"{row_xpath}/td[4]").text.strip()
+        row_status = driver.find_element(By.XPATH, f"{row_xpath}/td[6]/span").text.strip()
+        row_ids = [x.strip() for x in row_id.split(",")]  # รองรับหลาย ID
+        assert expected_id in row_ids, f"Got IDs {row_ids}, expected {expected_id}"
+        assert row_status == expected_status, f"Got status {row_status}, expected {expected_status}"
 
-    expected = ("CAT02-EQ005", "อนุมัติแล้ว/รอคืน")
-
-    row_id = driver.find_element(By.XPATH, "//table/tbody/tr[3]/td[5]").text.strip()
-    row_status = driver.find_element(By.XPATH, "//table/tbody/tr[3]/td[8]/span").text.strip()
-
-    assert (row_id, row_status) == expected, f"Got {(row_id, row_status)}"
-    print("✅ Row values ADBorrow success")
-
-    driver.find_element(By.XPATH, "//section/div[1]/div/button").click()
-#-----การคืน : คืนแล้ว
-    expected = ("CAT01-EQ001", "คืนแล้ว")
-
-    row_id = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr[1]/td[5]").text.strip()
-    row_status = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr[1]/td[8]").text.strip()
-
-    assert (row_id, row_status) == expected, f"Got {(row_id, row_status)}"
-    print("✅ Row values ADReturn1 success")
-
-    expected = ("CAT01-EQ005", "คืนแล้ว")
-
-    row_id = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr[5]/td[5]").text.strip()
-    row_status = driver.find_element(By.XPATH, "//section/div[2]/table/tbody/tr[5]/td[8]/span").text.strip()
-
-    assert (row_id, row_status) == expected, f"Got {(row_id, row_status)}"
-    print("✅ Row values ADReturn success")
+    # ใช้งาน
+    check_row("//table/tbody/tr[4]", "3920-005-1103/5", "อนุมัติแล้ว/รอคืน")
+    check_row("//table/tbody/tr[2]", "7110-006-0007/292", "อนุมัติแล้ว/รอคืน")
+    check_row("//table/tbody/tr[3]", "0000-001-0001/1", "คืนแล้ว")
+    check_row("//table/tbody/tr[1]", "7440-001-0006/124", "คืนแล้ว")
 
 finally:
     driver.quit()
