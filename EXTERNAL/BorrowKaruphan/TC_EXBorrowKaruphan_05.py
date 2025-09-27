@@ -16,30 +16,22 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-cookie_admin = {
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..RCYq70t8gX6PbQ2ONrE8VA.Pi7cJVbi3r2Sm8VcVwdM9WkktQlMy9lIC13c_G5Nd5Oz99nsF-AIZE1m3K5r4mLtcaBhRbxmbC60ul-EOOLKGeRV2cFOXuzo7L4Uz-aMgs9K1YHc812kcgfHBTlaljb8DGNosDvViuoRaEHVHEykXJB_Vu8rUNy59UfbEWwKEdE9J-ku-kTq1VbJ36SjoeLVD0blxbu3Zl_EFSGHrik7cxEQrL9lEvu8C1nX9XTSzTU.eOxAciP3Tmd_bivlrx1P-tnkyONZekDdPkw4JDtPKXw",  # token ของ role1-admin
-    "path": "/",
-}
-
-cookie_external = {
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..xunMeUPMP0wg1Un1wdQxNg.G5R6gW3NZ7KY8ySqVQsRgjV__etlEGv3WWiuct9U7XXMwUpx78OOMwmo_XWY_leYIW0KMUljo9SeW9IKGNdCJ7ILgFQ4xGNdys8sOro1KMbQaIQhA4w-gkrenVPp_1AboTNYHFZQGoLfNXPweYfnEmnjAP12Susy25DYclXV__y5W-pxjXsuZT59Pf2Y1cV-nAOaGyhxVBbwRTvYAZYE94af_C1lZbnqqmll__YHCSybKbJcZhPL2mTntR6kpTX0X9HU7c_3WCpZQkjFmV-yTjKxC6Ex-E7oQ05R3lX3vsMxkdmTBv6_tmTFDRkC6FAAtsDaWzDZAb9joUmlXTE0m17Jrknc3xVKTjQ9VVazTEceScmPeH1WZBJVwvrOwBnh.Z6TE3ozbxNpfjyr0Q_Pkzx1QjKW8duhu-PPRfv4BHqs",  # token ของ role3-external
-    "path": "/",
-}
-
 try:
-    driver.get("http://localhost:3000")   
-    driver.add_cookie(cookie_external)    
-    driver.get("http://localhost:3000/role3-external")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
+    
+    signup = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'เข้าสู่บัญชีของคุณ')]"))).text.strip()
+    assert signup == "เข้าสู่บัญชีของคุณ"
+    print("✅ Check the success words")
 
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("napass.sirikarn@gmail.com")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("napass1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
-
+    
     role = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/p[2]"))).text
-    assert role == "กลุ่มงานเทคนิคการแพทย์"
+    assert role == "กลุ่มงานบริการด้านปฐมภูมิและองค์รวม"
     print("✅ Check Role success")
 
     driver.find_element(By.XPATH, "//section/div[2]/table/thead/tr/th[1]/input").click()
@@ -112,7 +104,7 @@ try:
     ).click()
     time.sleep(2)
 
-    driver.save_screenshot(os.path.join(folder_name, "TC_EXBorrowKaruphan_05.png"))
+    #driver.save_screenshot(os.path.join(folder_name, "TC_EXBorrowKaruphan_05.png"))
     time.sleep(1)
 
 finally:
