@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -41,30 +40,17 @@ try:
     dropdown_button.click()
 
     submenu_item = WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='รายการครุภัณฑ์']]"))
+        EC.element_to_be_clickable((By.XPATH, "//a[span[text()='เพิ่มหมวดหมู่ครุภัณฑ์']]"))
     )   
     submenu_item.click()
     time.sleep(2)
 
-    driver.find_element(By.XPATH,"//section/div[1]/div/button[1]").click()
+    driver.find_element(By.XPATH,"//input[@placeholder='ชื่อหมวดหมู่ครุภัณฑ์']").send_keys("testครุภัณฑ์การแพทย์และวิทยาศาสตร์")
+    driver.find_element(By.XPATH,"//input[@placeholder='รายละเอียด (ไม่บังคับ)']").send_keys("")
+    driver.find_element(By.XPATH,"//section[2]/form/div[4]/button").click()
     time.sleep(2)
-
-    dropdown = Select(driver.find_element(By.XPATH,"//form//div[2]//select"))
-    dropdown.select_by_visible_text("ครุภัณฑ์ทางการแพทย์และวิทยาศาสตร์")
-    driver.find_element(By.XPATH,"//input[@placeholder='0000-000-0000/0']").send_keys("1111-222-3333/12")
-    driver.find_element(By.XPATH,"//input[@placeholder='กรอกเลข ID']").send_keys("10005")
-    driver.find_element(By.XPATH,"//input[@placeholder='ชุดแอลกอฮอลเท้าเหยียบ']").send_keys("เครื่องชั่งดิจิทัล")
-    driver.find_element(By.XPATH,"//textarea[@placeholder='เป็นสแตนเลส แบบเท้าเหยียบ']").send_keys("อุปกรณ์วัดน้ำหนัก")
-    driver.find_element(By.XPATH,"//input[@placeholder='60,000']").send_keys("1200")
     
-    date_input = driver.find_element(By.XPATH, "//input[@type='date']")
-    #date_input.clear()
-    date_input.send_keys("08/01/2550")  
-
-    driver.find_element(By.XPATH,"//button[text()= 'ยกเลิก']").click()
-    time.sleep(2)
-
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADListKaruphan_02.png"))
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADCategoryKaruphan_06.png"))
     time.sleep(1)
 
 finally:

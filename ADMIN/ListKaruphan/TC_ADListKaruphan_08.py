@@ -50,9 +50,9 @@ try:
     time.sleep(2)
 
     dropdown = Select(driver.find_element(By.XPATH,"//form//div[2]//select"))
-    dropdown.select_by_visible_text("ครุภัณฑ์ทางการแพทย์และวิทยาศาสตร์")
-    driver.find_element(By.XPATH,"//input[@placeholder='0000-000-0000/0']").send_keys("1111-222-3333/12")
-    driver.find_element(By.XPATH,"//input[@placeholder='กรอกเลข ID']").send_keys("10005")
+    dropdown.select_by_visible_text("ครุภัณฑ์สำนักงาน")
+    driver.find_element(By.XPATH,"//input[@placeholder='0000-000-0000/0']").send_keys("1111-222-3333/01")
+    driver.find_element(By.XPATH,"//input[@placeholder='กรอกเลข ID']").send_keys("1")
     driver.find_element(By.XPATH,"//input[@placeholder='ชุดแอลกอฮอลเท้าเหยียบ']").send_keys("เครื่องชั่งดิจิทัล")
     driver.find_element(By.XPATH,"//textarea[@placeholder='เป็นสแตนเลส แบบเท้าเหยียบ']").send_keys("อุปกรณ์วัดน้ำหนัก")
     driver.find_element(By.XPATH,"//input[@placeholder='60,000']").send_keys("1200")
@@ -61,10 +61,10 @@ try:
     #date_input.clear()
     date_input.send_keys("08/01/2550")  
 
-    driver.find_element(By.XPATH,"//button[text()= 'ยกเลิก']").click()
+    driver.find_element(By.XPATH,"//button[text() = 'เพิ่มข้อมูล']").click()
     time.sleep(2)
-
-    driver.save_screenshot(os.path.join(folder_name, "TC_ADListKaruphan_02.png"))
+    
+    driver.save_screenshot(os.path.join(folder_name, "TC_ADListKaruphan_08.png"))
     time.sleep(1)
 
 finally:

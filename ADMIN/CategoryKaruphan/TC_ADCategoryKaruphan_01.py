@@ -15,25 +15,26 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..26G55f08WZ4HLB5aG0op2w.E2QhOpdwIuLFqFrXvYFt9o-tJf9vBObaRRMasRclN1fVatG8A2BpqbbyOKa687Gf5qHCt-s1iHhJUDxVp-EeT--QZi3yYvSl8V09I3Z8pXXMp3fcVhxlCwhR_DBR41nmmkXjNldx8tztRcShxOUpGU-ARIb_iJ4hhnF49LH5FCM7rT-qQKyh8CGSK_9nDuqICJS2TdyM5BaNSkIAWfgbMsBpYANTf-I_J6A1woo36sk.77C_2e5mD5QCC0xgoXAYZKy1PwbijOzkm6FY1BF2QDc",
-    "path": "/",
-})
-
 try:
-    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role1-admin")
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
-    signin = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH,"//p[contains(@class, 'text-white')]"))
-    ).text.strip()
-
-    assert signin in ["ผู้ใช้ระบบครุภัณฑ์", "System Admin"], f"Unexpected value: {signin}"
+    signin = driver.find_element(By.XPATH,"//form/h1").text
+    assert signin == "ระบบครุภัณฑ์"
     print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("admin@pcu.test")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("Admin#1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
     time.sleep(2)
+
+    assert "karuphan-hospital" in driver.title
+    print("✅ Home page loaded")
+    time.sleep(1)
+
+    Role = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[2]/p[1]"))).text.strip()
+    assert Role == "ผู้ดูแลระบบครุภัณฑ์"
+    print("✅ Check Role success")
 
     dropdown_button = driver.find_element(By.XPATH, "//button[span[text()='จัดการครุภัณฑ์']]")
     dropdown_button.click()
@@ -48,8 +49,6 @@ try:
     driver.find_element(By.XPATH,"//input[@placeholder='รายละเอียด (ไม่บังคับ)']").send_keys("")
     driver.find_element(By.XPATH,"//section[2]/form/div[4]/button").click()
     time.sleep(2)
-    driver.find_element(By.XPATH , "//section[1]/div[3]/div/button[1]").click()
-    time.sleep(5)
     
     driver.save_screenshot(os.path.join(folder_name, "TC_ADCategoryKaruphan_01.png"))
     time.sleep(1)
