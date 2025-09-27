@@ -15,19 +15,19 @@ options.add_experimental_option("detach",True)
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
-driver.get("http://localhost:3000")
-
-driver.add_cookie({
-    "name": "authjs.session-token",
-    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoibGNHbXhocGltT3FvM3loZU1VYi0zUENJaGFJeWpGdWwxMUVnbF82aldITEpfUzIxOXJmZmRXNlZvWFZqbWVnaVNvdEh0MjdlbEhDU3JmcUkxMTh5SEEifQ..lac3njMje46WCneeEjcb9w.cNLedmSN9j2qLhBpIGlVQFbRLHDicsZ09ZvjVZV4ms9yPFsYq7hkSOw7QKqfrfCARwIPQJg07JaurWL_ZZTOKoMu1psrIeMBdFYw2LE71JFEftHpE6tNKbzHqyYjvuhfgVgwgHCaKWwX6_vJ_bI2GTJPE3hGHGdUtNUIapDtOQP7PCvb-QQ3nxvY5ZxuqIZzuZVGoCn0BbCeaHujdZPuAnheNvZ8iUm6_K63fgJEGJYhCus53d_bBk_TdfnqQrEZE5oR00HoZ7SRLXNHL5McqHLK3KYnDXFMXfFYXe9PLK-8pOD9QGblmdXrpdiWYuaWP8j41NbOqqYz8ZlQEKkGMUEp-XQGPyOTS6cftF97kA22xENHYosAEJJoAob50xyzbfGUABcuslPy7JkOX7dMCFjdsiJjjyvLEi3vlpAsXL0.na-mBaIwCwWh2HAbcC6wS7bP6yYvt2A_2esU-bTmBS0",
-    "path": "/",
-})
-
 try:
-    #เปิดเว็บไซต์ และเช็กว่าเปิดแล้ว
-    driver.get("http://localhost:3000/role2-internal")
-    time.sleep(2)
+    driver.get("https://karuphan-hospital-production.up.railway.app/")
     
+    signup = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'เข้าสู่บัญชีของคุณ')]"))).text.strip()
+    assert signup == "เข้าสู่บัญชีของคุณ"
+    print("✅ Check the success words")
+
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/input").send_keys("napass.sirikarn@gmail.com")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/div[1]/input").send_keys("napass1234")
+    driver.find_element(By.XPATH,"/html/body/div[1]/form/button").click()
+    time.sleep(2)
+
     role = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/p[2]"))).text
     assert role == "กลุ่มงานบริการด้านปฐมภูมิและองค์รวม"
@@ -40,7 +40,7 @@ try:
 
     amount = driver.find_element(By.XPATH, "//div[2]//div[3]/p").text
     #print(f"a = '{amount}'")
-    assert amount == "รวม 5 ชิ้น จาก 5 รายการ"
+    assert amount == "รวม 2 ชิ้น จาก 2 รายการ"
     print("✅ Check the success words")
     time.sleep(2)
 
